@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SADC CBDC Peer-to-Peer Transactions</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+        h2 { color: #003366; }
+        input, select, button { display: block; margin: 10px 0; padding: 10px; width: 100%; max-width: 400px; }
+        #reader { width: 300px; margin-bottom: 20px; }
+        .section { margin-bottom: 30px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 0 5px #ccc; }
+    </style>
+</head>
+<body>
+    <h2>SADC CBDC Offline P2P Payments Platform</h2>
+
+    <div class="section">
+        <h3>Send CBDC</h3>
+        <input type="text" id="recipientPhone" placeholder="Recipient Phone Number">
+        <input type="text" id="recipientBankAccount" placeholder="Recipient Bank Account Number">
+        <input type="number" id="amountToSend" placeholder="Amount to Send">
+        <button onclick="sendCBDC()">Send CBDC</button>
+    </div>
+
+    <div class="section">
+        <h3>QR Code Scanner</h3>
+        <div id="reader"></div>
+        <div id="result"></div>
+    </div>
+
+    <div class="section">
+        <h3>Trade CBDC for Crypto</h3>
+        <input type="number" id="cryptoAmount" placeholder="Amount in CBDC">
+        <select id="cryptoType">
+            <option value="BTC">Bitcoin (BTC)</option>
+            <option value="ETH">Ethereum (ETH)</option>
+        </select>
+        <button onclick="tradeCrypto()">Trade</button>
+    </div>
+
+    <div class="section">
+        <h3>Online Shopping</h3>
+        <div class="product">
+            <h4>Digital Watch</h4>
+            <p>Price: R250</p>
+            <button onclick="addToCart('Digital Watch', 250)">Add to Cart</button>
+        </div>
+        <div class="product">
+            <h4>Bluetooth Earphones</h4>
+            <p>Price: R500</p>
+            <button onclick="addToCart('Bluetooth Earphones', 500)">Add to Cart</button>
+        </div>
+        <button onclick="checkout()">Checkout</button>
+        <div id="cartDisplay"></div>
+    </div>
+
+    <script>
+        const html5QrCode = new Html5Qrcode("reader");
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            document.getElementById("result").innerText = `Scanned: ${decodedText}`;
+            html5QrCode.stop();
+        };
+        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, qrCodeSuccessCallback);
+
+        function sendCBDC() {
+            const phone = document.getElementById('recipientPhone').value;
+            const bankAccount = document.getElementById('recipientBankAccount').value;
+            const amount = parseFloat(document.getElementById('amountToSend').value);
+            alert(`CBDC Sent: R${amount} to ${phone || bankAccount}`);
+        }
+
+        function tradeCrypto() {
+            const amount = parseFloat(document.getElementById('cryptoAmount').value);
+            const crypto = document.getElementById('cryptoType').value;
+            alert(`Traded R${amount} CBDC for ${crypto}`);
+        }
+
+        let cart = [];
+
+        function addToCart(productName, price) {
+            cart.push({ productName, price });
+            displayCart();
+        }
+
+        function displayCart() {
+            const cartDisplay = document.getElementById("cartDisplay");
+            cartDisplay.innerHTML = "<h4>Cart:</h4>" + cart.map(item => `<p>${item.productName} - R${item.price}</p>`).join('');
+        }
+
+        function checkout() {
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            alert(`Checkout completed. Total: R${total}`);
+            cart = [];
+            displayCart();
+        }
+    </script>
+</body>
+</html>
+
