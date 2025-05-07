@@ -12,9 +12,8 @@
       margin: 0;
       padding: 0;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      flex-direction: column;
+      min-height: 100vh;
     }
     .container {
       background-color: #fff;
@@ -23,8 +22,8 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 600px;
+      margin: auto;
       overflow-y: auto;
-      max-height: 100vh;
     }
     h1, h2, h3 {
       color: #003366;
@@ -51,6 +50,12 @@
       border-radius: 4px;
       margin-bottom: 5px;
     }
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      margin: 20px 0;
+    }
   </style>
 </head>
 <body>
@@ -62,8 +67,26 @@
       <option value="+27" data-country="RSA">+27 (South Africa)</option>
       <option value="+263" data-country="ZIM">+263 (Zimbabwe)</option>
       <option value="+260" data-country="ZAM">+260 (Zambia)</option>
-      <!-- More countries -->
+      <!-- Add more country codes as needed -->
     </select>
+
+    <select id="nationality">
+      <option value="South Africa">South Africa</option>
+      <option value="Zimbabwe">Zimbabwe</option>
+      <option value="Zambia">Zambia</option>
+      <option value="Namibia">Namibia</option>
+      <option value="Botswana">Botswana</option>
+      <option value="Lesotho">Lesotho</option>
+      <option value="Eswatini">Eswatini</option>
+      <option value="Mozambique">Mozambique</option>
+      <option value="Malawi">Malawi</option>
+      <option value="Angola">Angola</option>
+      <option value="Tanzania">Tanzania</option>
+      <option value="DRC">Democratic Republic of Congo</option>
+      <option value="Seychelles">Seychelles</option>
+      <option value="Mauritius">Mauritius</option>
+    </select>
+
     <input type="text" id="name" placeholder="First Name">
     <input type="text" id="surname" placeholder="Surname">
     <input type="email" id="email" placeholder="Email Address">
@@ -93,6 +116,10 @@
   </div>
 </div>
 
+<footer>
+  &copy; 2025 SADC Digital Payment Platform — Licensed for financial applications within SADC member states.
+</footer>
+
 <script>
   let user = null;
 
@@ -104,12 +131,13 @@
 
   function sendSMS(phone, message) {
     console.log(`SMS to ${phone}: ${message}`);
-    // Replace with SMS API (Twilio, Africa's Talking etc.)
+    // Integrate with an SMS provider if needed
   }
 
   function register() {
     const code = document.getElementById('countryCode').value;
     const country = document.querySelector('#countryCode option:checked').dataset.country;
+    const nationality = document.getElementById('nationality').value;
     const phone = document.getElementById('phone').value.trim();
     const idNumber = document.getElementById('idNumber').value.trim();
     const fullPhone = code + phone;
@@ -123,6 +151,7 @@
       phone: fullPhone,
       name: document.getElementById('name').value,
       surname: document.getElementById('surname').value,
+      nationality: nationality,
       email: document.getElementById('email').value,
       house: document.getElementById('house').value,
       idNumber: idNumber,
@@ -155,7 +184,7 @@
     document.getElementById('dashboard').style.display = 'block';
 
     document.getElementById('userPhone').innerText = user.phone;
-    document.getElementById('userName').innerText = `${user.name} ${user.surname}`;
+    document.getElementById('userName').innerText = `${user.name} ${user.surname} (${user.nationality})`;
     document.getElementById('linkedBank').innerText = `${user.bankName} ${user.bankAcc}`;
     updateBalances();
     renderTransactions();
@@ -196,4 +225,4 @@
   }
 </script>
 </body>
-</html
+</html>
