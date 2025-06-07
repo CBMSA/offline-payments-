@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +27,7 @@
     h1, h2, h3 {
       color: #003366;
     }
-    input, select, button {
+    input, select, button, textarea {
       width: 100%;
       padding: 10px;
       margin: 6px 0;
@@ -116,6 +117,14 @@
     <h3>Transaction History</h3>
     <div id="transactions"></div>
   </div>
+
+  <div id="ussd" style="margin-top: 20px;">
+    <h3>USSD Dialing Code Simulation</h3>
+    <p>Type a code like <strong>*123*2108#</strong> or <strong>*123*balance#</strong></p>
+    <input type="text" id="ussdCode" placeholder="Enter USSD Code e.g. *123*balance#" />
+    <button onclick="processUSSD()">Submit Code</button>
+    <div id="ussdResponse" style="margin-top: 10px; background: #f0f8ff; padding: 10px; border-radius: 5px;"></div>
+  </div>
 </div>
 
 <footer>
@@ -130,7 +139,6 @@
   }
 
   function fetchBankBalance(accountNumber) {
-    // Simulate different balances for different account numbers
     const balances = {
       "0001": 50000000,
       "123456": 1000000000,
@@ -153,7 +161,7 @@
       nationality: document.getElementById('nationality').value,
       bankName: document.getElementById('bankName').value,
       bankAcc: accountNumber,
-      cbdcBalance: 1000000000000, // 1 Trillion
+      cbdcBalance: 1000000000000,
       bankBalance: bankBal,
       transactions: []
     };
@@ -217,7 +225,26 @@
       txContainer.innerHTML += `<p>${tx.date} - ${tx.type}: R${tx.amount.toLocaleString()}</p>`;
     });
   }
+
+  function processUSSD() {
+    const input = document.getElementById('ussdCode').value.trim();
+    const responseDiv = document.getElementById('ussdResponse');
+
+    if (!user) {
+      responseDiv.innerText = "Please register or login before using USSD simulation.";
+      return;
+    }
+
+    if (input === "*123*balance#") {
+      responseDiv.innerText = `CBDC: R${user.cbdcBalance.toLocaleString()} | Bank: R${user.bankBalance.toLocaleString()}`;
+    } else if (input === "*123*2108#") {
+      responseDiv.innerText = `Welcome ${user.name}. Your registered office is ${user.office}. Account: ${user.bankAcc}`;
+    } else {
+      responseDiv.innerText = "Invalid or unsupported USSD code.";
+    }
+  }
 </script>
 
 </body>
 </html>
+
